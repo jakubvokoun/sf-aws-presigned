@@ -15,11 +15,55 @@
             </form>
         </div>
     </div>
+    <div class="card mt-2">
+        <div class="card-body">
+            <h5 class="card-title">Upload to presigned URL</h5>
+            <div id="presigned_url_alert" class="alert alert-success" role="alert" style="display: none;">
+            </div>
+            <form enctype="multipart/form-data" method="POST">
+                <div class="mb-3">
+                    <label for="new_bucket_key" class="form-label">Bucket key</label>
+                    <input type="new_bucket_key" class="form-control" id="new_bucket_key" required>
+                </div>
+                <div class="mb-3">
+                    <label for="file" class="form-label">File</label>
+                    <input type="file" class="form-control" id="file" required>
+                </div>
+                <button id="upload_to_s3" type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascripts %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
     <script>
+        var uploadFile = function(url, s3Fields) {
+            var formData = new FormData();
+            for (key in s3Fields) {
+                if (key === 'key') {
+                    formData.append(key, $('#new_bucket_key').val());
+                } else {
+                    formData.append(key, s3Fields[key]);
+                }
+            };
+            formData.append('file', $('input[type="file"]')[0].files[0]);
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: formData,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data, textStatus, request) {
+                    if (request.status === 200 || request.status === 204) {
+                        alert('OK');
+                    } else {
+                        alert('Error');
+                    }
+                },
+            });
+        };
         $(function() {
             $('#get_presigned_url').on('click', function() {
                 var bucket_key = $('#bucket_key').val();
@@ -42,6 +86,16 @@
                         a.appendTo(al)
                         al.show();
 
+                    }
+                });
+                return false;
+            });
+            $('#upload_to_s3').on('click', function() {
+                $.ajax({
+                    url: '/api/get-presigned-upload-url',
+                    method: 'POST',
+                    success: function(data) {
+                        uploadFile(data.formAttributes['action'], data.formInputs)
                     }
                 });
                 return false;

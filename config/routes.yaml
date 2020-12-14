@@ -5,3 +5,7 @@ index:
 api_get_presigned_url:
     path: /api/get-presigned-url
     controller: App\Controller\ApiController::getPresignedUrl
+
+api_get_presigned_upload_url:
+    path: /api/get-presigned-upload-url
+    controller: App\Controller\ApiController::getPresignedUploadUrl
