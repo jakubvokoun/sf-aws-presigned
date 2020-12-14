@@ -1,4 +1,51 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Get presigned URL</h5>
+            <div id="presigned_url_alert" class="alert alert-success" role="alert" style="display: none;">
+            </div>
+            <form>
+                <div class="mb-3">
+                    <label for="bucket_key" class="form-label">Bucket key</label>
+                    <input type="bucket_key" class="form-control" id="bucket_key" required>
+                </div>
+                <button id="get_presigned_url" type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+    <script>
+        $(function() {
+            $('#get_presigned_url').on('click', function() {
+                var bucket_key = $('#bucket_key').val();
+                if (bucket_key.length === 0) {
+                    return;
+                }
+                $.ajax({
+                    url: '/api/get-presigned-url',
+                    method: 'POST',
+                    data: {
+                        bucket_key: bucket_key
+                    },
+                    success: function(data) {
+                        var a = $('<a />')
+                            .attr('href', data.presignedUrl)
+                            .attr('target', '_blank')
+                            .text(data.presignedUrl);
+                        var al = $('#presigned_url_alert');
+                        al.text('');
+                        a.appendTo(al)
+                        al.show();
+
+                    }
+                });
+                return false;
+            });
+        });
+    </script>
 {% endblock %}

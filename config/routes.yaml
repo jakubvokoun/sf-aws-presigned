@@ -1,3 +1,7 @@
 index:
     path: /
     controller: App\Controller\DefaultController::index
+
+api_get_presigned_url:
+    path: /api/get-presigned-url
+    controller: App\Controller\ApiController::getPresignedUrl
