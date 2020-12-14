@@ -18,6 +18,7 @@
         "twig/twig": "^2.12|^3.0"
     },
     "require-dev": {
+        "symfony/var-dumper": "5.2.*"
     },
     "config": {
         "optimize-autoloader": true,
