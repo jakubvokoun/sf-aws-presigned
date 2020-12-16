@@ -62,6 +62,13 @@
                         alert('Error');
                     }
                 },
+                error: function(xhr, textStatus, errorThrown) {
+                    var msg = 'Error';
+                    if (errorThrown.length > 0) {
+                        msg = 'Error: ' + errorThrown;
+                    }
+                    alert(msg);
+                }
             });
         };
         $(function() {
@@ -86,6 +93,13 @@
                         a.appendTo(al)
                         al.show();
 
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var msg = 'Error';
+                        if (errorThrown.length > 0) {
+                            msg = 'Error: ' + errorThrown;
+                        }
+                        alert(msg);
                     }
                 });
                 return false;
@@ -96,7 +110,14 @@
                     method: 'POST',
                     success: function(data) {
                         uploadFile(data.formAttributes['action'], data.formInputs)
-                    }
+                    },
+                    error: function(xhr, textStatus, errorThrown) {
+                        var msg = 'Error';
+                        if (errorThrown.length > 0) {
+                            msg = 'Error: ' + errorThrown;
+                        }
+                        alert(msg);
+                        }
                 });
                 return false;
             });
